@@ -19,9 +19,9 @@ ruta_raiz = "C:/Yo/Proyecto IMUs"
 ## Ejecución principal del programa
 if __name__== '__main__':
 
-    ## Opcion 1: Uso de simulador diferente al de AHRS con ground-truth de ejemplo de ese git
-    ## Opcion 2: Uso de simulador diferente al de AHRS con ground-truth de PyShoe
-    ## Opcion 3: Uso de simulador diferente al de AHRS con ground-truth de HelmetPoser
+    ## Opcion 1: Uso de simulador con ground-truth de ejemplo
+    ## Opcion 2: Uso de simulador ground-truth de PyShoe
+    ## Opcion 3: Uso de simulador con ground-truth de HelmetPoser
     opcion = 1
 
     ## En caso de que quiera trabajar con un simulador distinto al de AHRS

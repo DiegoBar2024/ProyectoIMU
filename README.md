@@ -8,8 +8,8 @@ Dataset HelmetPoser: https://lqiutong.github.io/HelmetPoser.github.io/
 
 ## Estructura de Carpetas
 
-Clonar el repositorio dentro de la carpeta <<Código>> siguiendo la siguiente estructura de carpetas.
-En el fichero Principal.py modificar la ruta de la carpeta raíz para acceder a los datasets.
+Clonar el repositorio dentro de la carpeta `Codigo` siguiendo la siguiente estructura de carpetas. La ubicación de la carpeta raíz `root` es arbitraria.
+En el fichero Principal.py modificar la ruta de la carpeta raíz al equipo correspondiente para acceder a los datasets y ejecutar el código.
 
 <!-- TREEVIEW START -->
 ```bash
@@ -17,6 +17,22 @@ En el fichero Principal.py modificar la ruta de la carpeta raíz para acceder a 
 │   ├── Codigo/
 │   ├── Datasets/
 │   │   ├── DatasetPyShoe/
+│   │   │   ├── data/
+│   │   │   ├── results/
 │   │   └── DatasetHelmetPoser/
 ```
 <!-- TREEVIEW END -->
+
+## Scripts
+
+* `Optimizacion.py`
+
+Fichero que contiene las funciones correspondientes a la optimización de las varianzas de los ruidos del EKF
+
+* `Orientacion.py`
+
+Fichero que contiene las funciones correspondientes a la estimación de la orientación en base a las mediciones de la IMU y cálculo de error en la estimación con respecto a las secuencias de ground-truth.
+
+* `SimuladorIMU.py`
+
+Fichero que contiene un simulador de mediciones de una IMU
