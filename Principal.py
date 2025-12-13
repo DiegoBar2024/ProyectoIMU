@@ -1,5 +1,4 @@
 import pandas as pd
-import sys
 from ahrs.common.quaternion import *
 import numpy as np
 from matplotlib import pyplot as plt
@@ -11,6 +10,7 @@ from rosbag import *
 from Orientacion import *
 from Optimizacion import *
 from SimuladorIMU import Simulator
+import os
 
 ## Ruta de la carpeta raíz en donde está el proyecto
 ## (adaptar al equipo en cuestión antes de usar el código)
@@ -28,7 +28,7 @@ if __name__== '__main__':
     if opcion == 1:
 
         ## Cargo el archivo .csv donde tengo los datos de ground-truth
-        csv = np.genfromtxt("GroundTruth.txt", delimiter = "", skip_header = 1)
+        csv = np.genfromtxt("{}\GroundTruth.txt".format(os.path.dirname(os.path.realpath(__file__))), delimiter = "", skip_header = 1)
 
         ## Obtengo la orientación real en cuaterniones expresados (qw, qx, qy, qz)
         cuat_real = np.array((csv[:, 7], csv[:, 4], csv[:, 5], csv[:, 6])).transpose()
@@ -301,7 +301,6 @@ if __name__== '__main__':
         plt.plot(np.rad2deg(2 * np.arccos(np.abs(cuat_offset_vec[:,0]))))
         plt.xlabel("Número de muestra")
         plt.ylabel("Error de Orientación")
-        plt.legend()
         plt.show()
 
         ## Graficación de la velocidad angular real con respecto a la velocidad angular simulada
