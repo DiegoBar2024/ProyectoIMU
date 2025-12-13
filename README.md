@@ -9,7 +9,7 @@ Dataset HelmetPoser: https://lqiutong.github.io/HelmetPoser.github.io/
 ## Estructura de Carpetas
 
 Clonar el repositorio dentro de la carpeta `Codigo` siguiendo la siguiente estructura de carpetas. La ubicación de la carpeta raíz `root` es arbitraria.
-En el fichero Principal.py modificar la ruta de la carpeta raíz al equipo correspondiente para acceder a los datasets y ejecutar el código.
+En el fichero `Principal.py` se requiere modificar la ruta de la carpeta raíz al equipo correspondiente para acceder a los datasets y ejecutar el código.
 
 <!-- TREEVIEW START -->
 ```bash
@@ -24,6 +24,8 @@ En el fichero Principal.py modificar la ruta de la carpeta raíz al equipo corre
 <!-- TREEVIEW END -->
 
 ## Scripts
+
+Los scripts de funciones que se manejan son los siguientes.
 
 * `Optimizacion.py`
 
