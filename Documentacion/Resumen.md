@@ -36,13 +36,27 @@ Para poder validar la fiabilidad de las simulaciones de IMU provenientes del rep
   <strong>Figura 2:</strong> Esquema de validación del simulador de IMU del repositorio de GitHub
 </p>
 
-Suponiendo que se tienen $q_{real}$ y $q_{est}$ como los cuaterniones de orientación real y estimado, el error se obtiene a partir del cálculo del cuaternión que representa la rotación de uno hacia otro:
-$$q_{err} = q_{real} \otimes q_{est}^{*}$$
+Suponiendo que se tienen \(q_{\text{real}}\) y \(q_{\text{est}}\) como los cuaterniones de orientación real y estimado, el error se obtiene a partir del cálculo del cuaternión que representa la rotación de uno hacia otro:
+\[
+q_{\text{err}} = q_{\text{real}} \otimes q_{\text{est}}^*
+\]
 
-Utilizando la convención de $q =[q_{w} \ q_{x} \ q_{y} \ q_{z}]^{T}$ para el caso ideal se tiene que $q_{err}=[1 \ 0 \ 0 \ 0]^{T}$. Entonces una medida útil acerca del error es el ángulo de rotación asociado a $q_{err}$. Por la teoría se sabe que $\cos{\left( \frac{\theta}{2}\right) }=q_w$ de modo que el ángulo de error se puede calcular del siguiente modo:
-$$\theta_{err} = 2\arccos(q_{w_{err}})$$
+Utilizando la convención de \(q = [q_w, q_x, q_y, q_z]^T\) para el caso ideal se tiene que 
+\[
+q_{\text{err}} = [1, 0, 0, 0]^T
+\]
 
-Idealmente $\theta_{err}=0$ aunque en esta aplicación se considera aceptable una tolerancia $\theta_{err}<\theta_{max}$ donde $\theta_{max}\approx5$°. Se implementó el esquema de validación de la Figura 1 y obtuvo el cuaternión de error comparando los valores real y estimado al imponer como condición inicial $q=q_{0}$ siendo $q_{0}$ el cuaternión de orientación real en $t=0$. Se observa en este escenario que $\theta_{err}<2.5$°$\ \forall t$ lo cual está dentro de los límites aceptables.
+Entonces una medida útil acerca del error es el ángulo de rotación asociado a \(q_{\text{err}}\). Por la teoría se sabe que
+\[
+\cos\left(\frac{\theta}{2}\right) = q_w
+\]
+
+de modo que el ángulo de error se puede calcular del siguiente modo:
+\[
+\theta_{\text{err}} = 2 \arccos(q_{w,\text{err}})
+\]
+
+Idealmente \(\theta_{\text{err}}=0\) aunque en esta aplicación se considera aceptable una tolerancia \(\theta_{\text{err}} < \theta_{\max}\) donde \(\theta_{\max} \approx 5^\circ\). Se implementó el esquema de validación de la Figura 1 y se obtuvo el cuaternión de error comparando los valores real y estimado al imponer como condición inicial \(q=q_0\), siendo \(q_0\) el cuaternión de orientación real en \(t=0\). Se observa en este escenario que \(\theta_{\text{err}} < 2.5^\circ \ \forall t\), lo cual está dentro de los límites aceptables.
 
 <p align="center">
   <img src="ErrorOrientHelmetPoser.png" alt="My image" style="max-width: 100%;"><br>
@@ -50,10 +64,11 @@ Idealmente $\theta_{err}=0$ aunque en esta aplicación se considera aceptable un
 </p>
 
 De la teoría se sabe que el cuaternión de orientación se encuentra relacionado con la velocidad angular mediante:
+\[
+\dot q = \frac{1}{2} q \otimes \omega
+\]
 
-$$\dot q = \frac{1}{2}q \otimes \omega$$
-
-En la ecuación anterior, $\omega$ hace referencia a la velocidad angular del sistema solidario al IMU con respecto al sistema inercial, expresado en el sistema del IMU. El simulador de IMU de AHRS utiliza una discretización de dicha ecuación para poder simular la velocidad angular en base a los cuaterniones de orientación provistos. En la Figura 3 se compara la velocidad angular simulada con la real. Se observa que la velocidad angular simulada presenta excursiones anormalmente altas en aquellos instantes en los cuales se produce un cambio brusco en la orientación.
+En la ecuación anterior, \(\omega\) hace referencia a la velocidad angular del sistema solidario al IMU con respecto al sistema inercial, expresado en el sistema del IMU. El simulador de IMU de AHRS utiliza una discretización de dicha ecuación para poder simular la velocidad angular en base a los cuaterniones de orientación provistos. En la Figura 3 se compara la velocidad angular simulada con la real. Se observa que la velocidad angular simulada presenta excursiones anormalmente altas en aquellos instantes en los cuales se produce un cambio brusco en la orientación.
 
 <p align="center">
   <img src="VelAngularErrorOrient.png" alt="My image" style="max-width: 100%;"><br>
@@ -62,21 +77,22 @@ En la ecuación anterior, $\omega$ hace referencia a la velocidad angular del si
 
 ## Optimización de varianzas de Ruido
 
-Se buscó una manera de estimar las varianzas correspondientes a los ruidos del giroscopio, acelerómetro y magnetómetro, denotadas como $\sigma_{a}^{2}$, $\sigma_{g}^{2}$, $\sigma_{m}^{2}$ respectivamente. Esta optimización tiene sentido para el algoritmo EKF (los otros algoritmos optimizan parámetros diferentes). A estos efectos se implementaron y compararon los siguientes algoritmos de optimización:
+Se buscó una manera de estimar las varianzas correspondientes a los ruidos del giroscopio, acelerómetro y magnetómetro, denotadas como \(\sigma_a^2\), \(\sigma_g^2\), \(\sigma_m^2\) respectivamente. Esta optimización tiene sentido para el algoritmo EKF (los otros algoritmos optimizan parámetros diferentes). A estos efectos se implementaron y compararon los siguientes algoritmos de optimización:
 
-1. <em>Random Search</em>: Se utilizaron las funciones previamente implementadas de la librería Optuna (https://optuna.org/) en Python.
-2. <em>Grid Search</em>: Se diseñó un algoritmo personalizado, presentado en la Figura 4.
+1. *Random Search*: Se utilizaron las funciones previamente implementadas de la librería Optuna (https://optuna.org/) en Python.
+2. *Grid Search*: Se diseñó un algoritmo personalizado, presentado en la Figura 4.
 
 Dado que el problema de optimización es no convexo en este caso, el propósito consistió en hallar combinaciones de parámetros en los cuales se produzca un mínimo local y no uno global.
 
 <p align="center">
   <img src="DiagramaIMU-Optim_Varianzas.drawio.png" alt="My image" style="max-width: 100%;"><br>
-  <strong>Figura 5:</strong> Esquema del algoritmo de optimización de varianzas utilizando una variante de <em>grid search</em>
+  <strong>Figura 5:</strong> Esquema del algoritmo de optimización de varianzas utilizando una variante de *grid search*
 </p>
 
 Con el fin de comparar el desempeño de ambos algoritmos, se tomó un registro particular y se llevó a cabo la optimización. Si bien el gráfico de evolución en el tiempo permite observar los efectos de la optimización, pareció conveniente utilizar el valor cuadrático medio del error de orientación como métrica objetiva del error. La expresión matemática se encuentra dada por:
-
-$$RMS = \sqrt{\sum_{n=1}^{N} 2\arccos(|q_{w_{err_{n}}}|)^2}$$
+\[
+\text{RMS} = \sqrt{\sum_{n=1}^{N} \left( 2 \arccos(|q_{w,\text{err}_n}|) \right)^2}
+\]
 
 <p align="center">
   <img src="ComparacionOrient.png" alt="My image" style="max-width: 100%;"><br>
@@ -87,16 +103,22 @@ $$RMS = \sqrt{\sum_{n=1}^{N} 2\arccos(|q_{w_{err_{n}}}|)^2}$$
 
 La idea es que los algoritmos de estimación de orientación de una IMU a partir de las mediciones del acelerómetro y giroscopio (además de valores de magnetómetro eventualmente) puedan ser utilizados en el estudio de la orientación relativa entre dos nodos ubicados en puntos diferentes.
 
-Dado que en esta aplicación lo que interesa determinar son la posición, velocidad y orientación relativas entre dos nodos (denomínense $i$ y $j$) mediante el uso de mediciones de ranging, pueden haber dos acercamientos:
+Dado que en esta aplicación lo que interesa determinar son la posición, velocidad y orientación relativas entre dos nodos (denomínense \(i\) y \(j\)) mediante el uso de mediciones de ranging, pueden haber dos acercamientos:
 
 1. El primer acercamiento implicaría unificar los algoritmos de estimación de orientación con las ecuaciones de sistema de navegación inercial (INS) construyendo un único EKF con un vector de estados dado por: 
-$$x=[q_{ij}\ v_{ij}\ p_{ij}] \in \mathbb{R}^{10}$$
+\[
+x = \begin{bmatrix} q_{ij} \\ v_{ij} \\ p_{ij} \end{bmatrix} \in \mathbb{R}^{10}
+\]
 cuyos elementos representan la orientación, velocidad y posición relativas respectivamente.
-2. El segundo acercamiento implica obtener la orientación relativa entre ambos nodos externamente mediante la ecuación: 
-$$q_{ij} = q_{i} \otimes q_{j}^{*}$$
-donde $q_{i}$ y $q_{j}$ representan las orientaciones absolutas de los nodos $i$ y $j$ obtenidas mediante algoritmos de estimación de orientación (EKF, Mahony, Madgwick, etc). Luego estos valores pueden ser utilizados como parte de la entrada de un EKF cuyo estado se reduciría a 
-$$x=[v_{ij}\ p_{ij}]\in \mathbb{R}^{6}$$
 
-El hecho de plantear las variables de estado en términos de cantidades relativas hace que sea más complicado aplicar directamente la corrección de velocidad nula en cada pie en período de <em>stance</em>. Entonces en principio se cuenta únicamente con la medición del ranging de ultrasonido y por lo tanto en este caso la ecuación de medición puede escribirse como: 
-$$z_{k}=h(x_{k})+v_{k}=||p_{ij_{k}}||_{2}+v_{k}$$
-donde $v_{k}$ representa el ruido de proceso y en principio se modela como AWGN.
+2. El segundo acercamiento implica obtener la orientación relativa entre ambos nodos externamente mediante la ecuación: 
+\[
+q_{ij} = q_i \otimes q_j^*, \quad
+x = \begin{bmatrix} v_{ij} \\ p_{ij} \end{bmatrix} \in \mathbb{R}^{6}
+\]
+
+El hecho de plantear las variables de estado en términos de cantidades relativas hace que sea más complicado aplicar directamente la corrección de velocidad nula en cada pie en período de *stance*. Entonces en principio se cuenta únicamente con la medición del ranging de ultrasonido y por lo tanto en este caso la ecuación de medición puede escribirse como: 
+\[
+z_k = h(x_k) + v_k = \|p_{ij,k}\|_2 + v_k
+\]
+donde \(v_k\) representa el ruido de proceso y en principio se modela como AWGN.
