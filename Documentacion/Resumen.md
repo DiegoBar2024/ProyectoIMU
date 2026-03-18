@@ -55,7 +55,7 @@ De la teoría se sabe que el cuaternión de orientación se encuentra relacionad
 
 $$\dot q = \frac{1}{2}q \otimes \omega$$
 
-En la ecuación anterior, $\omega$ hace referencia a la velocidad angular del sistema solidario al IMU con respecto al sistema inercial, expresado en el sistema del IMU. El simulador de IMU de AHRS utiliza una discretización de dicha ecuación para poder simular la velocidad angular en base a los cuaterniones de orientación provistos. En la Figura 3 se compara la velocidad angular simulada con la real. Se observa que la velocidad angular simulada presenta excursiones anormalmente altas en aquellos instantes en los cuales se produce un cambio brusco en la orientación.
+En la ecuación anterior, $\omega$ hace referencia a la velocidad angular del sistema solidario al IMU con respecto al sistema inercial, expresado en el sistema del IMU. El simulador de IMU de AHRS utiliza una discretización de dicha ecuación para poder simular la velocidad angular en base a los cuaterniones de orientación provistos. En la Figura 4 se compara la velocidad angular simulada con la real. Se observa que la velocidad angular simulada presenta excursiones anormalmente altas en aquellos instantes en los cuales se produce un cambio brusco en la orientación.
 
 <p align="center">
   <img src="VelAngularErrorOrient.png" alt="My image" style="max-width: 100%;"><br>
@@ -67,7 +67,7 @@ En la ecuación anterior, $\omega$ hace referencia a la velocidad angular del si
 Se buscó una manera de estimar las varianzas correspondientes a los ruidos del giroscopio, acelerómetro y magnetómetro, denotadas como $\sigma_{a}^{2}$, $\sigma_{g}^{2}$, $\sigma_{m}^{2}$ respectivamente. Esta optimización tiene sentido para el algoritmo EKF (los otros algoritmos optimizan parámetros diferentes). A estos efectos se implementaron y compararon los siguientes algoritmos de optimización:
 
 1. <em>Random Search</em>: Se utilizaron las funciones previamente implementadas de la librería Optuna (https://optuna.org/) en Python.
-2. <em>Grid Search</em>: Se diseñó un algoritmo personalizado, presentado en la Figura 4.
+2. <em>Grid Search</em>: Se diseñó un algoritmo personalizado, presentado en la Figura 5.
 
 Dado que el problema de optimización es no convexo en este caso, el propósito consistió en hallar combinaciones de parámetros en los cuales se produzca un mínimo local y no uno global.
 
