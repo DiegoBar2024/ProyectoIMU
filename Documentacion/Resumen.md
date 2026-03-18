@@ -106,6 +106,6 @@ $$x=[v_{ij}\ p_{ij}]\in \mathbb{R}^{6}$$
 
 El hecho de plantear las variables de estado en términos de cantidades relativas hace que sea más complicado aplicar directamente la corrección de velocidad nula en cada pie en período de <em>stance</em>. Entonces en principio se cuenta únicamente con la medición del ranging de ultrasonido y por lo tanto en este caso la ecuación de medición puede escribirse como:
 
-$$z_{k}=h(x_{k})+v_{k}=||p_{ij_{k}}||+v_{k}$$
+$$z_{k}=h(x_{k})+v_{k}= \lVert p_{ij_{k}} \rVert +v_{k}$$
 
 donde $v_{k}$ representa el ruido de proceso y en principio se modela como AWGN.
