@@ -44,7 +44,7 @@ Utilizando la convención de $q =[q_{w} \ q_{x} \ q_{y} \ q_{z}]^{T}$ para el ca
 
 $$\theta_{err} = 2\arccos(q_{w_{err}})$$
 
-Idealmente $\theta_{err}=0$ aunque en esta aplicación se considera aceptable una tolerancia $\theta_{err}<\theta_{max}$ donde $\theta_{max}\approx5$°. Se implementó el esquema de validación de la Figura 1 y obtuvo el cuaternión de error comparando los valores real y estimado al imponer como condición inicial $q=q_{0}$ siendo $q_{0}$ el cuaternión de orientación real en $t=0$. Se observa en este escenario que $\theta_{err}<2.5$°$\ \forall t$ lo cual está dentro de los límites aceptables.
+Idealmente $\theta_{err}=0$ aunque en esta aplicación se considera aceptable una tolerancia $\theta_{err}<\theta_{max}$ donde $\theta_{max}\approx5$°. Se implementó el esquema de validación de la Figura 1 y obtuvo el cuaternión de error comparando los valores real y estimado al imponer como condición inicial $q=q_{0}$ siendo $q_{0}$ el cuaternión de orientación real en $t=0$. Se observa en este escenario que $\theta_{err}<2.5$° $\forall t$ lo cual está dentro de los límites aceptables.
 
 <p align="center">
   <img src="ErrorOrientHelmetPoser.png" alt="My image" style="max-width: 100%;"><br>
