@@ -37,9 +37,11 @@ Para poder validar la fiabilidad de las simulaciones de IMU provenientes del rep
 </p>
 
 Suponiendo que se tienen $q_{real}$ y $q_{est}$ como los cuaterniones de orientación real y estimado, el error se obtiene a partir del cálculo del cuaternión que representa la rotación de uno hacia otro:
+
 $$q_{err} = q_{real} \otimes q_{est}^{*}$$
 
 Utilizando la convención de $q =[q_{w} \ q_{x} \ q_{y} \ q_{z}]^{T}$ para el caso ideal se tiene que $q_{err}=[1 \ 0 \ 0 \ 0]^{T}$. Entonces una medida útil acerca del error es el ángulo de rotación asociado a $q_{err}$. Por la teoría se sabe que $\cos{\left( \frac{\theta}{2}\right) }=q_w$ de modo que el ángulo de error se puede calcular del siguiente modo:
+
 $$\theta_{err} = 2\arccos(q_{w_{err}})$$
 
 Idealmente $\theta_{err}=0$ aunque en esta aplicación se considera aceptable una tolerancia $\theta_{err}<\theta_{max}$ donde $\theta_{max}\approx5$°. Se implementó el esquema de validación de la Figura 1 y obtuvo el cuaternión de error comparando los valores real y estimado al imponer como condición inicial $q=q_{0}$ siendo $q_{0}$ el cuaternión de orientación real en $t=0$. Se observa en este escenario que $\theta_{err}<2.5$°$\ \forall t$ lo cual está dentro de los límites aceptables.
@@ -90,13 +92,20 @@ La idea es que los algoritmos de estimación de orientación de una IMU a partir
 Dado que en esta aplicación lo que interesa determinar son la posición, velocidad y orientación relativas entre dos nodos (denomínense $i$ y $j$) mediante el uso de mediciones de ranging, pueden haber dos acercamientos:
 
 1. El primer acercamiento implicaría unificar los algoritmos de estimación de orientación con las ecuaciones de sistema de navegación inercial (INS) construyendo un único EKF con un vector de estados dado por: 
+
 $$x=[q_{ij}\ v_{ij}\ p_{ij}] \in \mathbb{R}^{10}$$
+
 cuyos elementos representan la orientación, velocidad y posición relativas respectivamente.
 2. El segundo acercamiento implica obtener la orientación relativa entre ambos nodos externamente mediante la ecuación: 
+
 $$q_{ij} = q_{i} \otimes q_{j}^{*}$$
-donde $q_{i}$ y $q_{j}$ representan las orientaciones absolutas de los nodos $i$ y $j$ obtenidas mediante algoritmos de estimación de orientación (EKF, Mahony, Madgwick, etc). Luego estos valores pueden ser utilizados como parte de la entrada de un EKF cuyo estado se reduciría a 
+
+donde $q_{i}$ y $q_{j}$ representan las orientaciones absolutas de los nodos $i$ y $j$ obtenidas mediante algoritmos de estimación de orientación (EKF, Mahony, Madgwick, etc). Luego estos valores pueden ser utilizados como parte de la entrada de un EKF cuyo estado se reduciría a
+
 $$x=[v_{ij}\ p_{ij}]\in \mathbb{R}^{6}$$
 
-El hecho de plantear las variables de estado en términos de cantidades relativas hace que sea más complicado aplicar directamente la corrección de velocidad nula en cada pie en período de <em>stance</em>. Entonces en principio se cuenta únicamente con la medición del ranging de ultrasonido y por lo tanto en este caso la ecuación de medición puede escribirse como: 
-$$z_{k}=h(x_{k})+v_{k}=||p_{ij_{k}}||_{2}+v_{k}$$
+El hecho de plantear las variables de estado en términos de cantidades relativas hace que sea más complicado aplicar directamente la corrección de velocidad nula en cada pie en período de <em>stance</em>. Entonces en principio se cuenta únicamente con la medición del ranging de ultrasonido y por lo tanto en este caso la ecuación de medición puede escribirse como:
+
+$$z_{k}=h(x_{k})+v_{k}=||p_{ij_{k}}||+v_{k}$$
+
 donde $v_{k}$ representa el ruido de proceso y en principio se modela como AWGN.
